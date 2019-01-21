@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-class AbstractDensityModel(ABC):
+class AbstractDensity(ABC):
     def __init__(self, verbose=False):
         self.verbose=verbose
 

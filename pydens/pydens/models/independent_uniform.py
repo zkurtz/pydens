@@ -4,7 +4,7 @@ from scipy import stats
 
 from . import base
 
-class IndependentUniform(base.AbstractDensityModel):
+class IndependentUniform(base.AbstractDensity):
     def __init__(self):
         pass
 

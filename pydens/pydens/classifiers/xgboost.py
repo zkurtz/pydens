@@ -7,46 +7,32 @@ import tempfile
 from time import time
 import warnings
 
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
-    import lightgbm as lgb
+import xgboost as xgb
 
 from .base import AbstractLearner
 
-class Lgbm(AbstractLearner):
-    def __init__(self, params=None, categorical_features=None, verbose=False):
+class Xgbm(AbstractLearner):
+    def __init__(self, params=None, verbose=False):
         super().__init__(params, verbose)
         self.nround = self.params.pop('num_boost_round')
-        self.categorical_features = categorical_features
 
     def default_params(self):
         return {
             'task': 'train',
             'boosting_type': 'gbdt',
-            'objective': 'xentropy',
-            'learning_rate': 0.07,
-            'num_leaves': 20,
-            'min_data_in_leaf': 20,
+            'objective': 'binary',
+            'learning_rate': 0.1,
+            'max_depth': 6,
             'verbose': -1,
-            'num_boost_round': 50,
-            'num_threads': cpu_count(logical=False)
+            'nrounds': 60,
+            'nthreads': cpu_count(logical=False)
         }
 
-    def _parse_categoricals(self):
-        if self.categorical_features is None:
-            self.categoricals='auto'
-        else:
-            self.categoricals = self.categorical_features
-            assert all([c in self.features for c in self.categoricals])
-
-    def as_lgb_data(self, data):
-        self.features = data.X.columns.tolist()
+    def as_xgb_data(self, data):
         self._parse_categoricals()
-        return lgb.Dataset(
+        return xgb.Dataset(
             data.X,
-            data.y,
-            feature_name=self.features,
-            categorical_feature=self.categoricals
+            data.y
         )
 
     def train(self, data):
@@ -59,24 +45,10 @@ class Lgbm(AbstractLearner):
             params=copy.deepcopy(self.params),
             train_set=ld,
             num_boost_round=self.nround,
-            verbose_eval=False,
-            feature_name=self.features,
-            categorical_feature=self.categoricals
+            verbose_eval=False
         )
         tdiff = str(round(time() - t0))
-        self.vp('LightGBM training took ' + tdiff + ' seconds')
-
-    # def cv(self, data):
-    #     ld = self.as_lgb_data(data)
-    #     cvres = lgb.cv(
-    #         params=copy.deepcopy(self.params),
-    #         train_set=ld,
-    #         num_boost_round=self.nround,
-    #         verbose_eval=False,
-    #         feature_name=self.features,
-    #         categorical_feature=self.categoricals
-    #     )
-    #     pdb.set_trace()
+        self.vp('Xgboost training took ' + tdiff + ' seconds')
 
     def predict(self, X):
         return self.bst.predict(X)

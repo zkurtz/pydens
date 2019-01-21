@@ -1,25 +1,35 @@
 import numpy as np
 import pandas as pd
 import pdb
+from sklearn import metrics
 
-from .data import CadeData
 from .classifiers.lightgbm import Lgbm
 from .classifiers.base import AbstractLearner
+from .data import CadeData
+from . import models
+
+
+def auc(df):
+    fpr, tpr, _ = metrics.roc_curve(df.truth.values, df.pred.values, pos_label=1)
+    return metrics.auc(fpr, tpr)
 
 class Cade(object):
     ''' Classifier-adjusted density estimation
 
     Based on https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf
 
+    :param initial_density:
     :param sim_size:
     '''
 
-    modal_simulation_size = 10000
+    # A soft target for the number of instances to simulate when `sim_size` is "auto"
+    simulation_size_attractor = 10000
 
     def __init__(self,
-            initial_density=None,
+            initial_density=models.IndependentUniform(),
             classifier=Lgbm(),
             sim_size='auto'):
+        assert isinstance(initial_density, models.base.AbstractDensity)
         self.initial_density = initial_density
         assert isinstance(classifier, AbstractLearner)
         self.classifier = classifier
@@ -29,7 +39,7 @@ class Cade(object):
         ''' Determine the number of synthetic data samples to simulate
 
         If self.sim_size is 'auto', sets the simulation size as the geometric mean
-        between the
+        between the data size and self.simulation_size_attractor
 
         If self.sim_size is a positive number less than 100, simulation size is
         round(self.sim_size)*df.shape[0]
@@ -39,7 +49,7 @@ class Cade(object):
         n_real = df.shape[0]
         if isinstance(self.sim_size, str):
             assert self.sim_size=='auto'
-            sim_n = np.sqrt(n_real*self.modal_simulation_size)
+            sim_n = np.sqrt(n_real*self.simulation_size_attractor)
         elif self.sim_size < 100:
             assert self.sim_size > 0
             sim_n = round(self.sim_size*n_real)
@@ -50,7 +60,7 @@ class Cade(object):
         self.sim_rate = sim_n / df.shape[0]
         return int(sim_n)
 
-    def train(self, df):
+    def train(self, df, diagnostics=False):
         ''' Model the density of the data
 
         :param df: (pandas DataFrame)
@@ -66,6 +76,15 @@ class Cade(object):
         )
         # Train a classifier to distinguish real from fake
         self.classifier.train(partially_synthetic_data)
+        if diagnostics:
+            val_df = pd.DataFrame({
+                'pred': self.classifier.predict(partially_synthetic_data.X),
+                'truth': partially_synthetic_data.y
+            })
+            return {
+                'val_df': val_df,
+                'auc': auc(val_df),
+            }
 
     def density(self, X):
         ''' Predict the density at new points
