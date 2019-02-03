@@ -14,6 +14,7 @@ class SeriesTable(object):
 
 class Multinomial(base.AbstractDensity):
     ''' Model a single categorical feature '''
+
     def train(self, series):
         '''
         :param series: pandas series of integers
@@ -21,25 +22,42 @@ class Multinomial(base.AbstractDensity):
         st = SeriesTable(series)
         self.name = st.name
         self.df = st.df
-        reg_counts = self.df.n_obs + 1
-        self.df['p'] = reg_counts/reg_counts.sum()
+        reg_counts = self.df.n_obs.values + 1
+        self.df['density'] = reg_counts/reg_counts.sum()
+        # Assign a tiny prob for never-before observed values of this multinomial:
+        self.out_of_sample_dens = 1/(2*self.df.shape[0])
 
     def density(self, x):
-        if len(x) > 1:
-            pdb.set_trace()
+        ''' Compute the density for an individual value '''
         try:
-            return self.df.p[x]
+            return self.df.density[x]
         except:
-            pdb.set_trace()
-            assert x not in self.df.index.values
-            # This is a never-before observed value for this multinomial -- assign it a tiny prob
-            return 1/(2*self.df.shape[0])
+            # assert x not in self.df.index.values
+            return self.out_of_sample_dens
+
+    def density_series(self, x):
+        '''
+        Fast density computation for a list of values
+
+        :param x: (pandas.Series) Values at which to compute the density
+        '''
+        assert isinstance(x, pd.Series)
+        df = pd.DataFrame({
+            'levels': x,
+            'idx': range(len(x))
+        }).merge(
+            pd.DataFrame({
+                'levels': self.df.index.values,
+                'density': self.df.density.values
+            }), on='levels', how='left'
+        ).sort_values('idx')
+        return df.density.fillna(self.out_of_sample_dens).values
 
     def rvs(self, n=1):
         return np.random.choice(
             a=self.df.index.values,
             size=n,
-            p=self.df.p.values,
+            p=self.df.density.values,
             replace=True)
 
 class JointDensity(base.AbstractDensity):
@@ -77,11 +95,15 @@ class JointDensity(base.AbstractDensity):
     def density(self, df, log=False):
         assert isinstance(df, pd.DataFrame)
         assert all(df.columns==self.columns)
-        df_univariate = pd.DataFrame({
-            v: self.univariates[v].pdf(df[v].values)
+        df_log_univariate = pd.DataFrame({
+            #v: np.log([self.univariates[v].pdf(x) for x in df[v].values])
+            v: np.log(self.univariates[v].density_series(df[v]))
             for v in self.columns
         })
-        return df_univariate.prod(axis=1)
+        log_dens = df_log_univariate.sum(axis=1)
+        if log:
+            return log_dens
+        return np.exp(log_dens)
 
     def rvs(self, n):
         ''' Generate n samples from the fitted distribution '''
