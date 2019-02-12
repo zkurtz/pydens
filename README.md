@@ -14,7 +14,15 @@ feature in supervised learning) and anomaly detection (points of low density can
 
 ## Related work
 
+Kernel density estimation:
 - Fast Kernel Density Estimation, [fastkde](https://bitbucket.org/lbl-cascade/fastkde/src/master/)
+
+Tree-based density estimation:
+- [Random forests](https://github.com/ksanjeevan/randomforest-density-python)
+- [Isolation forests](https://towardsdatascience.com/outlier-detection-with-isolation-forest-3d190448d45e)
+for density ranking
+
+Other:
 - [Intersection](https://medium.com/datadriveninvestor/generating-fake-data-density-estimation-and-generative-adversarial-networks-3606a37fa95)
 of density estimation and generative adversarial networks
 

@@ -3,67 +3,15 @@ import pandas as pd
 import pdb
 
 from . import base
+from .multinomial import Multinomial
+from .piecewise_uniform import PiecewiseUniform
+#from .numeric import NumericMixture
 
-class SeriesTable(object):
-    def __init__(self, series, compute_empirical_p=False):
-        self.name = series.name
-        self.df = pd.DataFrame(series.value_counts(sort=False))
-        self.df.rename(columns={series.name: 'n_obs'}, inplace=True)
-        if compute_empirical_p:
-            self.df['empirical_p'] = self.df.n_obs/len(series)
-
-class Multinomial(base.AbstractDensity):
-    ''' Model a single categorical feature '''
-
-    def train(self, series):
-        '''
-        :param series: pandas series of integers
-        '''
-        st = SeriesTable(series)
-        self.name = st.name
-        self.df = st.df
-        reg_counts = self.df.n_obs.values + 1
-        self.df['density'] = reg_counts/reg_counts.sum()
-        # Assign a tiny prob for never-before observed values of this multinomial:
-        self.out_of_sample_dens = 1/(2*self.df.shape[0])
-
-    def density(self, x):
-        ''' Compute the density for an individual value '''
-        try:
-            return self.df.density[x]
-        except:
-            # assert x not in self.df.index.values
-            return self.out_of_sample_dens
-
-    def density_series(self, x):
-        '''
-        Fast density computation for a list of values
-
-        :param x: (pandas.Series) Values at which to compute the density
-        '''
-        assert isinstance(x, pd.Series)
-        df = pd.DataFrame({
-            'levels': x,
-            'idx': range(len(x))
-        }).merge(
-            pd.DataFrame({
-                'levels': self.df.index.values,
-                'density': self.df.density.values
-            }), on='levels', how='left'
-        ).sort_values('idx')
-        return df.density.fillna(self.out_of_sample_dens).values
-
-    def rvs(self, n=1):
-        return np.random.choice(
-            a=self.df.index.values,
-            size=n,
-            p=self.df.density.values,
-            replace=True)
 
 class JointDensity(base.AbstractDensity):
     def __init__(self):
         self.Categorical = Multinomial
-        self.Continuous = Multinomial # TODO: eventually import a smoother model from .continuous
+        self.Numeric = PiecewiseUniform
 
     def _fit_categorical(self, series):
         model = self.Categorical()
@@ -71,7 +19,7 @@ class JointDensity(base.AbstractDensity):
         return model
 
     def _fit_continuous(self, values):
-        model = self.Continuous()
+        model = self.Numeric()
         model.train(values)
         return model
 
@@ -92,12 +40,15 @@ class JointDensity(base.AbstractDensity):
         self.univariates = {v: self._fit_univarite(df[v]) for v in self.columns}
         #self.univariates = {v: stats.uniform(loc[k], scale[k]) for k, v in enumerate(self.columns)}
 
-    def density(self, df, log=False):
-        assert isinstance(df, pd.DataFrame)
-        assert all(df.columns==self.columns)
+    def density(self, x):
+        pdb.set_trace()
+
+    def density_series(self, x, log=False):
+        assert isinstance(x, pd.DataFrame)
+        assert all(x.columns==self.columns)
         df_log_univariate = pd.DataFrame({
             #v: np.log([self.univariates[v].pdf(x) for x in df[v].values])
-            v: np.log(self.univariates[v].density_series(df[v]))
+            v: np.log(self.univariates[v].density_series(x[v]))
             for v in self.columns
         })
         log_dens = df_log_univariate.sum(axis=1)

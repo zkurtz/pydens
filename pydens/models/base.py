@@ -5,7 +5,7 @@ class AbstractDensity(ABC):
         self.verbose=verbose
         # Aliases for density:
         self.pdf = self.density
-        self.predict = self.density
+        self.predict = self.density_series
 
     @abstractmethod
     def train(self, data):
@@ -13,6 +13,10 @@ class AbstractDensity(ABC):
 
     @abstractmethod
     def density(self, X):
+        pass
+
+    @abstractmethod
+    def density_series(self, X):
         pass
 
     @abstractmethod
