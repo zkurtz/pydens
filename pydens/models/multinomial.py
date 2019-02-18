@@ -1,30 +1,52 @@
 import numpy as np
 import pandas as pd
+import pdb
+import shmistogram as shmist
 
 from . import base
 
-class SeriesTable(object):
-    def __init__(self, series, compute_empirical_p=False):
-        self.name = series.name
-        self.df = pd.DataFrame(series.value_counts(sort=False))
-        self.df.rename(columns={series.name: 'n_obs'}, inplace=True)
-        if compute_empirical_p:
-            self.df['empirical_p'] = self.df.n_obs/len(series)
-
 class Multinomial(base.AbstractDensity):
     ''' Model a single categorical feature '''
-
-    def train(self, series):
-        '''
-        :param series: pandas series of integers
-        '''
-        st = SeriesTable(series)
-        self.name = st.name
-        self.df = st.df
+    def _density(self):
         reg_counts = self.df.n_obs.values + 1
         self.df['density'] = reg_counts/reg_counts.sum()
         # Assign a tiny prob for never-before observed values of this multinomial:
-        self.out_of_sample_dens = 1/(2*self.df.shape[0])
+        self.out_of_sample_dens = 1/(2*self.df.n_obs.sum())
+
+    def _train_empirically(self, series):
+        if isinstance(series, shmist.SeriesTable):
+            st = series
+            assert series.df.shape[0] > 0
+        elif isinstance(series, pd.Series):
+            assert len(series) > 0
+            st = shmist.SeriesTable(series)
+        self.name = st.name
+        self.df = st.df
+
+    def _train_by_accepting_params(self, counts, values=None):
+        self.df = pd.DataFrame({
+            'n_obs': counts
+        })
+        if values is not None:
+            pdb.set_trace()
+            self.df.index = values
+
+    def train(self, series=None, counts=None, values=None):
+        '''
+        Specify at least series or counts but not both
+        :param series: (pandas.Series or SeriesTable of integers
+        :param counts: numpy 1-d array of counts corresponding to
+        each entry of `values`
+        :param values: numpy 1-d array; integers representing each multinomial outcome;
+        ignored if `counts` is None.
+        '''
+        if series is not None:
+            self._train_empirically(series)
+        else:
+            assert counts is not None
+            assert counts.sum() > 0
+            self._train_by_accepting_params(counts, values=values)
+        self._density()
 
     def density(self, x):
         ''' Compute the density for an individual value '''

@@ -5,8 +5,6 @@ import pdb
 from . import base
 from .multinomial import Multinomial
 from .piecewise_uniform import PiecewiseUniform
-#from .numeric import NumericMixture
-
 
 class JointDensity(base.AbstractDensity):
     def __init__(self):
@@ -47,7 +45,6 @@ class JointDensity(base.AbstractDensity):
         assert isinstance(x, pd.DataFrame)
         assert all(x.columns==self.columns)
         df_log_univariate = pd.DataFrame({
-            #v: np.log([self.univariates[v].pdf(x) for x in df[v].values])
             v: np.log(self.univariates[v].density_series(x[v]))
             for v in self.columns
         })

@@ -88,10 +88,12 @@ class Cade(object):
 
     def density(self, X):
         ''' Predict the density at new points
+
+        :param X: (pd.DataFrame) Must match the exact column order of the `df` argument that was passed to self.train
         '''
         assert isinstance(X, pd.DataFrame)
         # Initial density estimate
-        synthetic_dens = self.initial_density.density(X)
+        synthetic_dens = self.initial_density.density_series(X)
         # Classifier adjustment factor
         p_real = self.classifier.predict(X)
         odds_real = p_real/(1 - p_real)
