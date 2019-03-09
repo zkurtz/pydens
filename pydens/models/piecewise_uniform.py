@@ -15,9 +15,11 @@ class PiecewiseUniform(base.AbstractDensity):
     - 'loner' points (or modes), represented with a multinomial distribution as point masses
     - 'crowd' points, approximated by a standard piecewise uniform distribution
     '''
-    def __init__(self, alpha=None, loner_min_count=20):
+    def __init__(self, alpha=None, loner_min_count=20, binning_params=None, verbose=0):
         self.alpha = alpha
         self.loner_min_count = loner_min_count
+        self.binning_params = binning_params
+        self.verbose = verbose
 
     def _uniform(self, bin):
         return stats.uniform(bin.lb, bin.ub - bin.lb)
@@ -60,7 +62,7 @@ class PiecewiseUniform(base.AbstractDensity):
         :param series: pandas series of numeric values
 
         '''
-        shm = Shmistogram(series)
+        shm = Shmistogram(series, binning_params=self.binning_params)
         self.loner_crowd_shares = shm.loner_crowd_shares
         # Loners
         self._train_loners(shm.loners)

@@ -26,11 +26,14 @@ class Cade(object):
     simulation_size_attractor = 10000
 
     def __init__(self,
-            initial_density=models.JointDensity(),
+            initial_density=None,
             classifier=Lgbm(),
             sim_size='auto',
             verbose=False):
-        self.initial_density = initial_density
+        if initial_density is None:
+            self.initial_density = models.JointDensity()
+        else:
+            self.initial_density = initial_density
         assert isinstance(self.initial_density, models.base.AbstractDensity)
         assert isinstance(classifier, AbstractLearner)
         self.classifier = classifier

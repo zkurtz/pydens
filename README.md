@@ -26,7 +26,8 @@ pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ## Related work
 
 Kernel density estimation:
-- Fast Kernel Density Estimation, [fastkde](https://bitbucket.org/lbl-cascade/fastkde/src/master/)
+- \[the original??\] [fastkde](https://bitbucket.org/lbl-cascade/fastkde/src/master/)
+- A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
 
 Tree-based density estimation:
 - [Random forests](https://github.com/ksanjeevan/randomforest-density-python)

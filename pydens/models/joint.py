@@ -7,9 +7,10 @@ from .multinomial import Multinomial
 from .piecewise_uniform import PiecewiseUniform
 
 class JointDensity(base.AbstractDensity):
-    def __init__(self, verbose=False):
+    def __init__(self, numeric_params=None, verbose=False):
         self.Categorical = Multinomial
         self.Numeric = PiecewiseUniform
+        self.numeric_params = numeric_params
         self.verbose = verbose
 
     def _fit_categorical(self, series):
@@ -18,7 +19,10 @@ class JointDensity(base.AbstractDensity):
         return model
 
     def _fit_continuous(self, values):
-        model = self.Numeric()
+        params = {}
+        if self.numeric_params is not None:
+            params = self.numeric_params
+        model = self.Numeric(verbose=self.verbose-1, **params)
         model.train(values)
         return model
 
