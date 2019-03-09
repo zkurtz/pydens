@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/zkurtz/pydens.svg?branch=master)](https://travis-ci.com/zkurtz/pydens)
 # pydens, density estimation in python
 
 A scalable and modular implementation of 
