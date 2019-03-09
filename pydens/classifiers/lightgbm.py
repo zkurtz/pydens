@@ -9,7 +9,10 @@ import warnings
 
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
-    import lightgbm as lgb
+    try:
+        import lightgbm as lgb
+    except:
+        pass
 
 from .base import AbstractLearner
 

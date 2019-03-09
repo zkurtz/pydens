@@ -7,9 +7,10 @@ from .multinomial import Multinomial
 from .piecewise_uniform import PiecewiseUniform
 
 class JointDensity(base.AbstractDensity):
-    def __init__(self):
+    def __init__(self, verbose=False):
         self.Categorical = Multinomial
         self.Numeric = PiecewiseUniform
+        self.verbose = verbose
 
     def _fit_categorical(self, series):
         model = self.Categorical()
@@ -22,9 +23,12 @@ class JointDensity(base.AbstractDensity):
         return model
 
     def _fit_univarite(self, series):
+        msg = "Fitting univariate density on " + series.name + " as "
         if series.name in self.categorical_features:
+            self.vp(msg + " categorical")
             return self._fit_categorical(series)
         else:
+            self.vp(msg + " continuous")
             return self._fit_continuous(series)
 
     def train(self, df, categorical_features=None):

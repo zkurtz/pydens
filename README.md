@@ -12,6 +12,13 @@ Disclaimer: This is a young repo with many basic TODOs remaining:
 Applications of density estimation include feature engineering (the density at a point can be a useful 
 feature in supervised learning) and anomaly detection (points of low density can be interpreted as anomalies).
 
+## Installation
+
+Not yet on pypi or conda forge, but installation is still easy with pip:
+```buildoutcfg
+pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
+```
+
 ## Related work
 
 Kernel density estimation:

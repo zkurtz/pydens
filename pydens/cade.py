@@ -26,14 +26,16 @@ class Cade(object):
     simulation_size_attractor = 10000
 
     def __init__(self,
-            initial_density=models.JointDensity(),
+            initial_density=models.JointDensity,
             classifier=Lgbm(),
-            sim_size='auto'):
-        assert isinstance(initial_density, models.base.AbstractDensity)
-        self.initial_density = initial_density
+            sim_size='auto',
+            verbose=False):
+        self.initial_density = initial_density(verbose=verbose)
+        assert isinstance(self.initial_density, models.base.AbstractDensity)
         assert isinstance(classifier, AbstractLearner)
         self.classifier = classifier
         self.sim_size = sim_size
+        self.verbose = verbose
 
     def compute_simulation_size(self, df):
         ''' Determine the number of synthetic data samples to simulate
