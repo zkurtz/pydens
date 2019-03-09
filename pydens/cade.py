@@ -26,7 +26,7 @@ class Cade(object):
     simulation_size_attractor = 10000
 
     def __init__(self,
-            initial_density=models.JointDensity,
+            initial_density=models.JointDensity(),
             classifier=Lgbm(),
             sim_size='auto',
             verbose=False):

@@ -1,5 +1,10 @@
 import pdb
 
+def test_cade_default():
+    from pydens.cade import Cade
+    x = Cade()
+    assert x is not None
+
 def test_cade():
     import numpy as np
     import pandas as pd
@@ -9,6 +14,7 @@ def test_cade():
     from pydens.classifiers.lightgbm import Lgbm
     from pydens import simulators
 
+    # Compile a Cade class with all defaults
     np.random.seed(0)
     N = 100
     sz = simulators.bivariate.Zena()

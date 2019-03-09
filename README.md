@@ -4,14 +4,17 @@
 A scalable and modular implementation of 
 [classifier-adjusted density estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf)
 with a unified interface to other density estimation packages.
+LightGBM is the default regression backend, but it's easy to replace this.
+
+Applications of density estimation include
+- feature engineering, since the density at a point can be a useful 
+feature in supervised learning
+- anomaly detection, since "a point of low density" is more or less what "anomaly" means
 
 Disclaimer: This is a young repo with many basic TODOs remaining:
 - define performance benchmarks
-- set up a code testing framework
+- vastly expand code testing coverage
 - wrap fastkde and scipy.stats.gaussian_kde
-
-Applications of density estimation include feature engineering (the density at a point can be a useful 
-feature in supervised learning) and anomaly detection (points of low density can be interpreted as anomalies).
 
 ## Installation
 
