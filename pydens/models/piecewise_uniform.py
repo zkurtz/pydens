@@ -23,10 +23,13 @@ class PiecewiseUniform(base.AbstractDensity):
         return stats.uniform(bin.lb, bin.ub - bin.lb)
 
     def _train_loners(self, loners):
-        m = Multinomial()
-        m.train(loners)
-        self.multinomial_df = self.loner_crowd_shares[0] * m.df[['density']]
-        self.multinomial = m
+        if loners.n == 0:
+            self.multinomial = None
+        else:
+            m = Multinomial()
+            m.train(loners)
+            self.multinomial_df = self.loner_crowd_shares[0] * m.df[['density']]
+            self.multinomial = m
 
     def _train_crowd(self, crowd_bins):
         self.crowd_bins=crowd_bins
@@ -57,15 +60,17 @@ class PiecewiseUniform(base.AbstractDensity):
         :param series: pandas series of numeric values
 
         '''
-        shm = Shmistogram(series, loner_min_count=self.loner_min_count, prebin_maxbins=10)
+        shm = Shmistogram(series)
         self.loner_crowd_shares = shm.loner_crowd_shares
         # Loners
         self._train_loners(shm.loners)
         # Crowd
         self._train_crowd(shm.bins)
         # Define density for out-of-sample obs as half the min observed density:
-        self.oos_density = min(
-            self.multinomial_df.density.min(),
+        mmin = np.inf
+        if self.multinomial is not None:
+            mmin = self.multinomial_df.density.min()
+        self.oos_density = min(mmin,
             self.crowd_lookup.density.min(),
             1/shm.n_obs
         )/2
@@ -75,16 +80,25 @@ class PiecewiseUniform(base.AbstractDensity):
         pdb.set_trace()
 
     def density_series(self, x):
+        '''
+        Compute the density function element wise on x
+        '''
         # Identify the unique values for which densities are needed
         ref = pd.DataFrame({'xval': x.unique()})
-        # Look up each loner in the multinomial levels; those with no match will be
-        #   treated as members of the crowd
-        ref = ref.merge(self.multinomial_df, left_on='xval', right_index=True, how='left')
-        is_crowd = np.isnan(ref.density)
-        ref_loners = ref[~is_crowd].copy()
-        ref_crowd = ref[is_crowd].drop('density', axis=1
-            ).sort_values('xval'
-            ).reset_index(drop=True)
+        try:
+            if self.multinomial is not None:
+                # Look up each loner in the multinomial levels; those with no match will be
+                #   treated as members of the crowd
+                ref = ref.merge(self.multinomial_df, left_on='xval', right_index=True, how='left')
+                is_crowd = np.isnan(ref.density)
+                ref_loners = ref[~is_crowd].copy()
+                ref_crowd = ref[is_crowd].drop('density', axis=1)
+            else:
+                ref_loners = None
+                ref_crowd = ref
+            ref_crowd = ref_crowd.sort_values('xval').reset_index(drop=True)
+        except:
+            pdb.set_trace()
         ref_crowd.xval = ref_crowd.xval.astype('float64')
         ref_crowd_roll = pd.merge_asof(ref_crowd, self.crowd_lookup, on='xval')
         final_ref = pd.concat([ref_loners, ref_crowd_roll])

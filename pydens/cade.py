@@ -30,7 +30,7 @@ class Cade(object):
             classifier=Lgbm(),
             sim_size='auto',
             verbose=False):
-        self.initial_density = initial_density(verbose=verbose)
+        self.initial_density = initial_density
         assert isinstance(self.initial_density, models.base.AbstractDensity)
         assert isinstance(classifier, AbstractLearner)
         self.classifier = classifier
@@ -83,10 +83,11 @@ class Cade(object):
                 'pred': self.classifier.predict(partially_synthetic_data.X),
                 'truth': partially_synthetic_data.y
             })
-            return {
+            res = {
                 'val_df': val_df,
                 'auc': auc(val_df),
             }
+            return res
 
     def density(self, X):
         ''' Predict the density at new points

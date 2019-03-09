@@ -11,6 +11,7 @@ setup(
     version=version['__version__'],
     packages=['pydens', 'pydens.classifiers', 'pydens.models', 'pydens.simulators'],
     install_requires=[
+        'lightgbm',
         'pandas',
         'psutil',
         'scikit-learn',

@@ -16,9 +16,16 @@ with warnings.catch_warnings():
 
 from .base import AbstractLearner
 
+def assert_lightgbm_installed():
+    try:
+        lgb
+    except:
+        raise Exception("pydens.classifiers.lightgbm.Lgbm requires lightgbm to be installed, but it is not")
+
 class Lgbm(AbstractLearner):
     def __init__(self, params=None, categorical_features=None, verbose=False):
         super().__init__(params, verbose)
+        assert_lightgbm_installed()
         self.nround = self.params.pop('num_boost_round')
         self.categorical_features = categorical_features
 

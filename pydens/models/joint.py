@@ -25,10 +25,10 @@ class JointDensity(base.AbstractDensity):
     def _fit_univarite(self, series):
         msg = "Fitting univariate density on " + series.name + " as "
         if series.name in self.categorical_features:
-            self.vp(msg + " categorical")
+            self.vp(msg + "categorical")
             return self._fit_categorical(series)
         else:
-            self.vp(msg + " continuous")
+            self.vp(msg + "continuous")
             return self._fit_continuous(series)
 
     def train(self, df, categorical_features=None):
