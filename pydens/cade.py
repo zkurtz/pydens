@@ -25,6 +25,10 @@ class Cade(object):
     # A soft target for the number of instances to simulate when `sim_size` is "auto"
     simulation_size_attractor = 10000
 
+    def vp(self, string):
+        if self.verbose:
+            print(string)
+
     def __init__(self,
             initial_density=None,
             classifier=Lgbm(),
@@ -71,15 +75,15 @@ class Cade(object):
         :param df: (pandas DataFrame)
         '''
         assert isinstance(df, pd.DataFrame)
-        # Train a generative density model
+        self.vp('Train a generative density model')
         self.initial_density.train(df)
-        # Simulate fake data from the model and join it with the real data
+        self.vp('Simulate fake data from the model and join it with the real data')
         sim_n = self.compute_simulation_size(df)
         partially_synthetic_data = CadeData(
             X=pd.concat([df, self.initial_density.rvs(sim_n)]),
             y=np.concatenate([np.ones(df.shape[0]), np.zeros(sim_n)])
         )
-        # Train a classifier to distinguish real from fake
+        self.vp('Train the classifier to distinguish real from fake')
         self.classifier.train(partially_synthetic_data)
         if diagnostics:
             val_df = pd.DataFrame({

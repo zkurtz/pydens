@@ -87,21 +87,19 @@ class PiecewiseUniform(base.AbstractDensity):
         '''
         # Identify the unique values for which densities are needed
         ref = pd.DataFrame({'xval': x.unique()})
-        try:
-            if self.multinomial is not None:
-                # Look up each loner in the multinomial levels; those with no match will be
-                #   treated as members of the crowd
-                ref = ref.merge(self.multinomial_df, left_on='xval', right_index=True, how='left')
-                is_crowd = np.isnan(ref.density)
-                ref_loners = ref[~is_crowd].copy()
-                ref_crowd = ref[is_crowd].drop('density', axis=1)
-            else:
-                ref_loners = None
-                ref_crowd = ref
-            ref_crowd = ref_crowd.sort_values('xval').reset_index(drop=True)
-        except:
-            pdb.set_trace()
-        ref_crowd.xval = ref_crowd.xval.astype('float64')
+        if self.multinomial is not None:
+            # Look up each loner in the multinomial levels; those with no match will be
+            #   treated as members of the crowd
+            ref = ref.merge(self.multinomial_df, left_on='xval', right_index=True, how='left')
+            is_crowd = np.isnan(ref.density)
+            ref_loners = ref[~is_crowd].copy()
+            ref_crowd = ref[is_crowd].drop('density', axis=1)
+        else:
+            ref_loners = None
+            ref_crowd = ref
+        ref_crowd = ref_crowd.sort_values('xval').reset_index(drop=True)
+        if self.crowd_lookup.xval.dtype == 'float64':
+            ref_crowd.xval = ref_crowd.xval.astype('float64')
         ref_crowd_roll = pd.merge_asof(ref_crowd, self.crowd_lookup, on='xval')
         final_ref = pd.concat([ref_loners, ref_crowd_roll])
         final_ref['density'] = final_ref.density.fillna(self.oos_density)
