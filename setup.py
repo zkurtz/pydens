@@ -1,9 +1,11 @@
 from setuptools import setup
 
+exec(open("pydens/version.py").read())
+
 setup(
     name='pydens',
-    version='0.1dev',
-    packages=['pydens'],
+    version=__version__,
+    packages=['pydens', 'pydens.classifiers', 'pydens.models', 'pydens.simulators'],
     install_requires=[
         'pandas',
         'psutil',
