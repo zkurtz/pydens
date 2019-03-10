@@ -124,7 +124,7 @@ class PiecewiseUniform(base.AbstractDensity):
         # Sample the crowd
         if n_crowd > 0:
             bins = pd.Series(self.crowd_multinom.rvs(n_crowd)).value_counts()
-            crowd_list = [self.crowd_uniforms[k].rvs(bins[k]) for k in range(len(bins))]
+            crowd_list = [self.crowd_uniforms[k].rvs(bins[k]) for k in bins.index.values]
             crowd = np.array([x for y in crowd_list for x in y])
         else:
             crowd = np.array([])
