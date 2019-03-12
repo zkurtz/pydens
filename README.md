@@ -14,7 +14,9 @@ feature in supervised learning
 Disclaimer: This is a young repo with many basic TODOs remaining:
 - define performance benchmarks
 - vastly expand code testing coverage
-- wrap fastkde and scipy.stats.gaussian_kde
+- wrap fastkde, possibly interpolating on its output using `scipy.interpolate.griddata`
+- wrap scipy.stats.gaussian_kde
+- wrap a basic Voronoi tessellation implementation
 
 ## Installation
 
