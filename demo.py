@@ -29,14 +29,27 @@ print("The classifier achieved AUROC = " + str(round(diagnostics['auc'], 3)))
 
 # Apply fastKDE (pip install fastkde)
 from fastkde import fastKDE
-myPDF, axes = fastKDE.pdf(data.iloc[:,0].values, data.iloc[:,1].values)
+
+class FastKDE(object):
+    def __init__(self):
+        pass
+
+    def train(self, data):
+        self.grid_dens, self.grid_axes = fastKDE.pdf(
+            *[data[col].values for col in data.columns]
+        )
+
+    def density(self, data):
+        pdb.set_trace()
+
+fkde = FastKDE()
+fkde.train(data)
 
 # Check the estimates against the generative density
 val_df = pd.DataFrame({
     'cade_est': cade.density(data),
-    #'fast_kde_est': myPDF(data),
-    # Since this is a simulation, we get to observe the generative density:
-    'gen': sz.pdf(data.values)
+    'fast_kde_est': fkde.density(data),
+    'gen': sz.pdf(data.values) # <- The true generative density:
 })
 cor = round(val_df.cade_est.corr(val_df.gen, method='spearman'), 3)
 print("Spearman correlation, estimated vs generative density: " + str(cor))
