@@ -9,7 +9,12 @@ with open("pydens/version.py") as fp:
 setup(
     name='pydens',
     version=version['__version__'],
-    packages=['pydens', 'pydens.classifiers', 'pydens.models', 'pydens.simulators'],
+    packages=['pydens',
+        'pydens.classifiers',
+        'pydens.models',
+        'pydens.simulators',
+        'pydens.wrappers'
+    ],
     install_requires=[
         'fastkde',
         'lightgbm',
