@@ -4,10 +4,10 @@ import pdb
 from shmistogram import Shmistogram
 from scipy import stats
 
-from . import base
+from ..base import AbstractDensity
 from .multinomial import Multinomial
 
-class PiecewiseUniform(base.AbstractDensity):
+class PiecewiseUniform(AbstractDensity):
     ''' Adaptive-width histogram density estimator
 
     Uses a shmistogram (https://github.com/zkurtz/shmistogram) to separates data
@@ -16,6 +16,7 @@ class PiecewiseUniform(base.AbstractDensity):
     - 'crowd' points, approximated by a standard piecewise uniform distribution
     '''
     def __init__(self, alpha=None, loner_min_count=20, binning_params=None, verbose=0):
+        super().__init__()
         self.alpha = alpha
         self.loner_min_count = loner_min_count
         self.binning_params = binning_params
@@ -78,12 +79,8 @@ class PiecewiseUniform(base.AbstractDensity):
         )/2
 
     def density(self, x):
-        print("not yet implemented; see self.density_series()")
-        pdb.set_trace()
-
-    def density_series(self, x):
         '''
-        Compute the density function element wise on x
+        Compute the density function on each row of x
         '''
         # Identify the unique values for which densities are needed
         ref = pd.DataFrame({'xval': x.unique()})

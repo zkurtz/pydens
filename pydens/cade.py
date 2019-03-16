@@ -7,13 +7,13 @@ from .classifiers.lightgbm import Lgbm
 from .classifiers.base import AbstractLearner
 from .data import CadeData
 from . import models
-
+from .base import AbstractDensity
 
 def auc(df):
     fpr, tpr, _ = metrics.roc_curve(df.truth.values, df.pred.values, pos_label=1)
     return metrics.auc(fpr, tpr)
 
-class Cade(object):
+class Cade(AbstractDensity):
     ''' Classifier-adjusted density estimation
 
     Based on https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf
@@ -25,20 +25,17 @@ class Cade(object):
     # A soft target for the number of instances to simulate when `sim_size` is "auto"
     simulation_size_attractor = 10000
 
-    def vp(self, string):
-        if self.verbose:
-            print(string)
-
     def __init__(self,
             initial_density=None,
             classifier=Lgbm(),
             sim_size='auto',
             verbose=False):
+        super().__init__()
         if initial_density is None:
             self.initial_density = models.JointDensity()
         else:
             self.initial_density = initial_density
-        assert isinstance(self.initial_density, models.base.AbstractDensity)
+        assert isinstance(self.initial_density, AbstractDensity)
         assert isinstance(classifier, AbstractLearner)
         self.classifier = classifier
         self.sim_size = sim_size
@@ -69,16 +66,28 @@ class Cade(object):
         self.sim_rate = sim_n / df.shape[0]
         return int(sim_n)
 
+    def _diagnostics(self, x, truth):
+        val_df = pd.DataFrame({
+            'pred': self.classifier.predict(x),
+            'truth': truth
+        })
+        self.diagnostics = {
+            'val_df': val_df,
+            'auc': auc(val_df),
+        }
+
     def train(self, df, diagnostics=False):
         ''' Model the density of the data
 
         :param df: (pandas DataFrame)
         '''
         assert isinstance(df, pd.DataFrame)
-        self.vp('Train a generative density model')
+        self.vp('Training a generative density model on '
+                + str(df.shape[0]) + ' samples')
         self.initial_density.train(df)
-        self.vp('Simulate fake data from the model and join it with the real data')
         sim_n = self.compute_simulation_size(df)
+        self.vp('Simulating ' + str(sim_n) +
+                ' fake samples from the model and join it with the real data')
         partially_synthetic_data = CadeData(
             X=pd.concat([df, self.initial_density.rvs(sim_n)]),
             y=np.concatenate([np.ones(df.shape[0]), np.zeros(sim_n)])
@@ -86,24 +95,22 @@ class Cade(object):
         self.vp('Train the classifier to distinguish real from fake')
         self.classifier.train(partially_synthetic_data)
         if diagnostics:
-            val_df = pd.DataFrame({
-                'pred': self.classifier.predict(partially_synthetic_data.X),
-                'truth': partially_synthetic_data.y
-            })
-            res = {
-                'val_df': val_df,
-                'auc': auc(val_df),
-            }
-            return res
+            self._diagnostics(partially_synthetic_data.X, partially_synthetic_data.y)
+        if self.verbose:
+            if not hasattr(self, 'diagnostics'):
+                self._diagnostics(partially_synthetic_data.X, partially_synthetic_data.y)
+            AUROC = str(round(self.diagnostics['auc'], 3))
+            print("In-sample, the classifier had AUROC = " + AUROC)
 
     def density(self, X):
         ''' Predict the density at new points
 
-        :param X: (pd.DataFrame) Must match the exact column order of the `df` argument that was passed to self.train
+        :param X: (pd.DataFrame or numpy array) Must match the exact column order of the `df`
+            argument that was passed to self.train
         '''
         assert isinstance(X, pd.DataFrame)
         # Initial density estimate
-        synthetic_dens = self.initial_density.density_series(X)
+        synthetic_dens = self.initial_density.density(X)
         # Classifier adjustment factor
         p_real = self.classifier.predict(X)
         odds_real = p_real/(1 - p_real)

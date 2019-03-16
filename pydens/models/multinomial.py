@@ -3,9 +3,9 @@ import pandas as pd
 import pdb
 import shmistogram as shmist
 
-from . import base
+from ..base import AbstractDensity
 
-class Multinomial(base.AbstractDensity):
+class Multinomial(AbstractDensity):
     ''' Model a single categorical feature '''
     def _density(self):
         reg_counts = self.df.n_obs.values + 1

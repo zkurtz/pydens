@@ -2,12 +2,13 @@ import numpy as np
 import pandas as pd
 import pdb
 
-from . import base
+from ..base import AbstractDensity
 from .multinomial import Multinomial
 from .piecewise_uniform import PiecewiseUniform
 
-class JointDensity(base.AbstractDensity):
+class JointDensity(AbstractDensity):
     def __init__(self, numeric_params=None, verbose=False):
+        super().__init__()
         self.Categorical = Multinomial
         self.Numeric = PiecewiseUniform
         self.numeric_params = numeric_params
@@ -46,14 +47,11 @@ class JointDensity(base.AbstractDensity):
         self.univariates = {v: self._fit_univarite(df[v]) for v in self.columns}
         #self.univariates = {v: stats.uniform(loc[k], scale[k]) for k, v in enumerate(self.columns)}
 
-    def density(self, x):
-        pdb.set_trace()
-
-    def density_series(self, x, log=False):
+    def density(self, x, log=False):
         assert isinstance(x, pd.DataFrame)
         assert all(x.columns==self.columns)
         df_log_univariate = pd.DataFrame({
-            v: np.log(self.univariates[v].density_series(x[v]))
+            v: np.log(self.univariates[v].density(x[v]))
             for v in self.columns
         })
         log_dens = df_log_univariate.sum(axis=1)

@@ -1,5 +1,6 @@
-import pdb
+import pytest
 
+@pytest.mark.filterwarnings("ignore:numpy.ufunc size changed")
 def test_cade_default():
     from pydens.cade import Cade
     x = Cade()
@@ -24,7 +25,8 @@ def test_cade():
         classifier=Lgbm(),
         sim_size = N
     )
-    diagnostics = cade.train(data, diagnostics=True)
+    cade.train(data, diagnostics=True)
+    diagnostics = cade.diagnostics
 
     assert all([x in diagnostics.keys() for x in ['val_df', 'auc']])
     df = diagnostics['val_df']
