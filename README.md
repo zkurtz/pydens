@@ -22,7 +22,12 @@ Disclaimer: This is a young repo with many basic TODOs remaining:
 
 Not yet on pypi or conda forge, but installation is still easy with pip:
 ```buildoutcfg
-pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
+pip install --upgrade pip
+pip install numpy
+pip install Cython
+pip install -r requirements.txt
+pip install .
+# pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ```
 
 ## Related work
