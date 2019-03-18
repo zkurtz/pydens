@@ -8,7 +8,6 @@ def test_cade_default():
 
 def test_cade():
     import numpy as np
-    import pandas as pd
 
     from pydens.cade import Cade
     from pydens.models import JointDensity
@@ -38,5 +37,5 @@ def test_cade():
 
     dens = cade.density(data.iloc[:3])
     assert len(dens) == 3
-    assert isinstance(dens, pd.Series)
+    assert isinstance(dens, np.ndarray)
     assert dens.dtype == 'float64'
