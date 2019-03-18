@@ -24,4 +24,4 @@ class Zena(AbstractDensity):
     def density(self, points):
         if isinstance(points, pd.DataFrame):
             points = points.values
-        return [self.gauss.pdf(p[0])*self.triang.pdf(p[1]) for p in points]
+        return np.array([self.gauss.pdf(p[0])*self.triang.pdf(p[1]) for p in points])

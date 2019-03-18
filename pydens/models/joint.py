@@ -54,7 +54,7 @@ class JointDensity(AbstractDensity):
             v: np.log(self.univariates[v].density(x[v]))
             for v in self.columns
         })
-        log_dens = df_log_univariate.sum(axis=1)
+        log_dens = df_log_univariate.sum(axis=1).values
         if log:
             return log_dens
         return np.exp(log_dens)

@@ -21,6 +21,7 @@ setup(
     version=version['__version__'],
     packages=['pydens',
         'pydens.classifiers',
+        'pydens.evaluation',
         'pydens.models',
         'pydens.simulators',
         'pydens.wrappers'
