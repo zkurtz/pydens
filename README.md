@@ -1,22 +1,20 @@
 [![Build Status](https://travis-ci.com/zkurtz/pydens.svg?branch=master)](https://travis-ci.com/zkurtz/pydens)
 # pydens, density estimation in python
 
-A scalable and modular implementation of 
-[classifier-adjusted density estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf)
-with a unified interface to other density estimation packages.
-LightGBM is the default regression backend, but it's easy to replace this.
+**pydens** provides a unified interface to several density estimation packages, 
+including an implementation of 
+[classifier-adjusted density 
+estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf).
+Start with [demo.ipynb](demo.ipynb).
 
 Applications of density estimation include
-- feature engineering, since the density at a point can be a useful 
-feature in supervised learning
-- anomaly detection, since "a point of low density" is more or less what "anomaly" means
+- mode detection: Locating regions of high density is a first step to efficiently
+allocate resources to address an epidemic, market a product, etc.
+- feature engineering: The density at a point with respect to any subset of the dimensions of a feature
+space can encode unique information. 
+- anomaly detection: A "a point of low density" is more or less what "anomaly" means.
 
-Disclaimer: This is a young repo with many basic TODOs remaining:
-- define performance benchmarks
-- vastly expand code testing coverage
-- wrap fastkde, possibly interpolating on its output using `scipy.interpolate.griddata`
-- wrap scipy.stats.gaussian_kde
-- wrap a basic Voronoi tessellation implementation
+Disclaimer: This is a young and relatively untested repo. See [the wishlist](#Roadmap).
 
 ## Installation
 
@@ -30,21 +28,40 @@ pip install .
 # pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ```
 
+## License
+
+MIT. See LICENSE.
+
 ## Related work
 
-Kernel density estimation:
-- \[the original??\] [fastkde](https://bitbucket.org/lbl-cascade/fastkde/src/master/)
 - A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
-
-Tree-based density estimation:
 - [Random forests](https://github.com/ksanjeevan/randomforest-density-python)
 - [Isolation forests](https://towardsdatascience.com/outlier-detection-with-isolation-forest-3d190448d45e)
 for density ranking
-
-Other:
 - [Intersection](https://medium.com/datadriveninvestor/generating-fake-data-density-estimation-and-generative-adversarial-networks-3606a37fa95)
 of density estimation and generative adversarial networks
 
-## License
+## Wishlist
 
-See LICENSE.
+Improve over the state-of-the-art:
+- Tune CADE to be the best it can be
+- Merge the best of the tree-based methods LightGBM, 
+[detpack](https://cran.r-project.org/web/packages/detpack/index.html),
+and 
+[astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html)
+
+Wrap more methods:
+- scipy.stats.gaussian_kde
+- locate a basic Voronoi tessellation implementation
+
+Improve infrastructure:
+- expand code testing coverage
+- build type-checking methods to enforce consistent outputs
+- define additional performance metrics
+- define new simulations and real-data benchmarks
+
+New tutorials, starting with
+- understanding density estimation metrics
+- how CADE works
+- density estimation trees
+
