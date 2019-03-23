@@ -1,11 +1,8 @@
 astropy==3.1.2
 cycler==0.10.0
-Cython==0.29.6
-fastkde==1.0.13
 kiwisolver==1.0.1
 lightgbm==2.2.3
 matplotlib==3.0.3
-numpy==1.16.2
 pandas==0.24.2
 psutil==5.6.1
 pyparsing==2.3.1

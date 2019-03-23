@@ -28,7 +28,9 @@ setup(
     ],
     install_requires=[
         'scikit-learn',
-        'fastkde',
+        # Installing fastke from source due to
+        #   https://bitbucket.org/lbl-cascade/fastkde/issues/5/using-a-non-tuple-sequence-for
+        'fastkde @ git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde',
         'lightgbm',
         'pandas',
         'psutil',
