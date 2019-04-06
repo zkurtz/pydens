@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import pdb
 
 from ..base import AbstractDensity
 from .multinomial import Multinomial

@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-import pdb
-from shmistogram import Shmistogram
 from scipy import stats
+import shmistogram as shmist
+import pdb
 
 from ..base import AbstractDensity
 from .multinomial import Multinomial
@@ -15,11 +15,12 @@ class PiecewiseUniform(AbstractDensity):
     - 'loner' points (or modes), represented with a multinomial distribution as point masses
     - 'crowd' points, approximated by a standard piecewise uniform distribution
     '''
-    def __init__(self, alpha=None, loner_min_count=20, binning_params=None, verbose=0):
+    def __init__(self, alpha=None, loner_min_count=20, binner=None, verbose=0):
         super().__init__()
         self.alpha = alpha
         self.loner_min_count = loner_min_count
-        self.binning_params = binning_params
+        if binner is None:
+            self.binner = shmist.binners.BayesianBlocks({'sample_size': 10000})
         self.verbose = verbose
 
     def _uniform(self, bin):
@@ -34,14 +35,19 @@ class PiecewiseUniform(AbstractDensity):
             self.multinomial_df = self.loner_crowd_shares[0] * m.df[['density']]
             self.multinomial = m
 
+    def _set_null_crowd(self):
+        self.crowd_uniforms = []
+        self.crowd_lookup = pd.DataFrame({
+            'xval': [], 'density': []
+        })
+
     def _train_crowd(self, crowd_bins):
         self.crowd_bins=crowd_bins
         # A multinomial distribution determines which bin to draw from
-        if crowd_bins.shape[0]==0:
-            self.crowd_uniforms = []
-            self.crowd_lookup = pd.DataFrame({
-                'xval':[], 'density':[]
-            })
+        if crowd_bins is None:
+            self._set_null_crowd()
+        elif crowd_bins.shape[0]==0:
+            self._set_null_crowd()
         else:
             self.crowd_multinom = Multinomial()
             self.crowd_multinom.train(counts=self.crowd_bins.freq.values)
@@ -63,7 +69,7 @@ class PiecewiseUniform(AbstractDensity):
         :param series: pandas series of numeric values
 
         '''
-        shm = Shmistogram(series, binning_params=self.binning_params)
+        shm = shmist.Shmistogram(series, binner=self.binner)
         self.loner_crowd_shares = shm.loner_crowd_shares
         # Loners
         self._train_loners(shm.loners)
@@ -120,6 +126,10 @@ class PiecewiseUniform(AbstractDensity):
             loners = np.array([])
         # Sample the crowd
         if n_crowd > 0:
+            try:
+                assert self.crowd_multinom is not None
+            except:
+                pdb.set_trace()
             bins = pd.Series(self.crowd_multinom.rvs(n_crowd)).value_counts()
             crowd_list = [self.crowd_uniforms[k].rvs(bins[k]) for k in bins.index.values]
             crowd = np.array([x for y in crowd_list for x in y])

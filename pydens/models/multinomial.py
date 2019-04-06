@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pdb
-import shmistogram as shmist
+from shmistogram.tabulation import SeriesTable
 
 from ..base import AbstractDensity
 
@@ -14,12 +14,12 @@ class Multinomial(AbstractDensity):
         self.out_of_sample_dens = 1/(2*self.df.n_obs.sum())
 
     def _train_empirically(self, series):
-        if isinstance(series, shmist.SeriesTable):
+        if isinstance(series, SeriesTable):
             st = series
             assert series.df.shape[0] > 0
         elif isinstance(series, pd.Series):
             assert len(series) > 0
-            st = shmist.SeriesTable(series)
+            st = SeriesTable(series)
         self.name = st.name
         self.df = st.df
 

@@ -34,6 +34,7 @@ setup(
         'lightgbm',
         'pandas',
         'psutil',
+        'scikit-learn',
         'shmistogram @ git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram'
     ],
     license='See LICENSE.txt'
