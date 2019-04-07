@@ -48,6 +48,7 @@ class FastKDE(AbstractDensity):
             https://bitbucket.org/lbl-cascade/fastkde/issues/5/using-a-non-tuple-sequence-for
         :param data: (pandas.DataFrame) of numeric features
         '''
+        assert isinstance(data, pd.DataFrame)
         with warnings.catch_warnings():
             msg = "Using a non-tuple sequence for multidimensional indexing is deprecated"
             warnings.filterwarnings("ignore", message=msg)

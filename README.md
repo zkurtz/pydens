@@ -12,9 +12,11 @@ Applications of density estimation include
 allocate resources to address an epidemic, market a product, etc.
 - feature engineering: The density at a point with respect to any subset of the dimensions of a feature
 space can encode unique information. 
-- anomaly detection: A "a point of low density" is more or less what "anomaly" means.
+- anomaly detection: A "a point of low density" is a common working definition of "anomaly",
+ although it's not the only one. (In astrostatistics, for example,
+ a density spike may draw attention as a possible galaxy.)
 
-Disclaimer: This is a young and relatively untested repo. See [the wishlist](#Roadmap).
+Disclaimer: This is a young and relatively untested repo. See [the wishlist](#Wishlist).
 
 ## Installation
 
@@ -25,7 +27,6 @@ pip install numpy
 pip install Cython
 pip install -r requirements.txt
 pip install .
-# pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ```
 
 ## License
@@ -43,25 +44,24 @@ of density estimation and generative adversarial networks
 
 ## Wishlist
 
-Improve over the state-of-the-art:
-- Tune CADE to be the best it can be
-- Merge the best of the tree-based methods LightGBM, 
-[detpack](https://cran.r-project.org/web/packages/detpack/index.html),
-and 
-[astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html)
-
-Wrap more methods:
-- scipy.stats.gaussian_kde
-- locate a basic Voronoi tessellation implementation
-
 Improve infrastructure:
 - expand code testing coverage
 - build type-checking methods to enforce consistent outputs
 - define additional performance metrics
 - define new simulations and real-data benchmarks
 
+Wrap more methods:
+- scipy.stats.gaussian_kde
+- include a basic Voronoi tessellation benchmarck
+
 New tutorials, starting with
 - understanding density estimation metrics
 - how CADE works
 - density estimation trees
 
+Improve over the state-of-the-art:
+- Tune CADE to be the best it can be
+- Merge the best of the tree-based methods of LightGBM, 
+[detpack](https://cran.r-project.org/web/packages/detpack/index.html),
+and 
+[astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html)

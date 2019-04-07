@@ -105,6 +105,8 @@ class Cade(AbstractDensity):
     def density(self, X):
         ''' Predict the density at new points
 
+        Apply equation 2.1 in https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf
+
         :param X: (pd.DataFrame or numpy array) Must match the exact column order of the `df`
             argument that was passed to self.train
         '''
@@ -115,6 +117,4 @@ class Cade(AbstractDensity):
         p_real = self.classifier.predict(X)
         odds_real = p_real/(1 - p_real)
         classifier_adjustment=self.sim_rate*odds_real
-        # All together as equation 2.1 in
-        #   https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf
         return synthetic_dens*classifier_adjustment

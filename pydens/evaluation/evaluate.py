@@ -3,7 +3,6 @@ import pandas as pd
 import pdb
 
 class Evaluation(object):
-    metrics = ['correlation_with_truth', 'mean_likelihood']
     def __init__(self, estimators, truth=None):
         for est in estimators:
             assert isinstance(estimators[est], np.ndarray)
@@ -11,23 +10,33 @@ class Evaluation(object):
         self.truth = truth
         if truth is not None:
             assert isinstance(truth, np.ndarray)
+        self.metrics = {
+            'rank-order correlation with truth': self.correlation_with_truth,
+            'mean density': self.mean_density
+        }
 
     def correlation_with_truth(self, pred):
-        ''' Maximize me '''
+        ''' Spearman (i.e. rank-order) correlation of prediction against truth
+
+        Maximize me
+        '''
         if self.truth is None:
             raise Exception("correlation_with_truth can't be computed since you did not provide anything for `truth`")
         s_pred = pd.Series(pred)
         t_pred = pd.Series(self.truth)
         return s_pred.corr(t_pred, method='spearman')
 
-    def mean_likelihood(self, pred):
-        ''' Maximize me, subject to the assumption that the predictions are consistent
-         with a probability function (i.e. integrating to 1) '''
+    def mean_density(self, pred):
+        ''' The mean density; this is exp(-deviance)
+
+         Maximize me (assuming that the estimator does not cheat by
+         producing a density model that integrates to something greater than one)
+         '''
         return np.mean(pred)
 
     def evaluate_estimator(self, name):
         est = self.estimators[name]
-        return [getattr(self, m)(est) for m in self.metrics]
+        return [fun(est) for name, fun in self.metrics.items()]
 
     def evaluate(self):
         estimators = self.estimators.keys()

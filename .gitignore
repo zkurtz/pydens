@@ -16,3 +16,4 @@ venv*
 *.gz
 *.toc
 *.tmp
+dev*
