@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 class CadeData(object):
@@ -9,3 +8,39 @@ class CadeData(object):
         assert len(y)==X.shape[0]
         self.X = X
         self.y = y
+
+def load_SHAP_census_data():
+    ''' This loads the 'adults' dataset cached in SHAP, borrowing a few SHAP
+    file parsing code snippets, https://github.com/slundberg/shap/blob/master/shap/datasets.py
+    '''
+    try:
+        import shap
+    except:
+        raise Exception("Do `pip install shap` and try again")
+    dtypes = [
+        ("Age", "float32"),
+        ("Workclass", "category"),
+        ("fnlwgt", "float32"),
+        ("Education", "category"),
+        ("Education-Num", "float32"),
+        ("Marital Status", "category"),
+        ("Occupation", "category"),
+        ("Relationship", "category"),
+        ("Race", "category"),
+        ("Sex", "category"),
+        ("Capital Gain", "float32"),
+        ("Capital Loss", "float32"),
+        ("Hours per week", "float32"),
+        ("Country", "category"),
+        ("Target", "category")
+    ]
+    df = pd.read_csv(
+        "https://github.com/slundberg/shap/raw/master/data/adult.data",
+        names=[d[0] for d in dtypes],
+        na_values="?",
+        dtype=dict(dtypes)
+    )
+    df = df[df.Country == ' United-States'].copy()
+    df.drop(['Country', 'Education', "fnlwgt"], axis=1, inplace=True)
+    df.rename({'Target': 'Income'}, axis=1, inplace=True)
+    return df
