@@ -76,18 +76,6 @@ class Lgbm(AbstractLearner):
         tdiff = str(round(time() - t0))
         self.vp('LightGBM training took ' + tdiff + ' seconds')
 
-    # def cv(self, data):
-    #     ld = self.as_lgb_data(data)
-    #     cvres = lgb.cv(
-    #         params=copy.deepcopy(self.params),
-    #         train_set=ld,
-    #         num_boost_round=self.nround,
-    #         verbose_eval=False,
-    #         feature_name=self.features,
-    #         categorical_feature=self.categoricals
-    #     )
-    #     pdb.set_trace()
-
     def predict(self, X):
         return self.bst.predict(X)
 

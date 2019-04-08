@@ -5,14 +5,14 @@
 including an implementation of 
 [classifier-adjusted density 
 estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf).
-Start with [demo.ipynb](demo.ipynb).
+Start with [demo.ipynb](notebooks/demo.ipynb).
 
 Applications of density estimation include
 - mode detection: Locating regions of high density is a first step to efficiently
 allocate resources to address an epidemic, market a product, etc.
 - feature engineering: The density at a point with respect to any subset of the dimensions of a feature
 space can encode unique information. 
-- anomaly detection: A "a point of low density" is a common working definition of "anomaly",
+- anomaly detection: A "point of low density" is a common working definition of "anomaly",
  although it's not the only one. (In astrostatistics, for example,
  a density spike may draw attention as a possible galaxy.)
 
