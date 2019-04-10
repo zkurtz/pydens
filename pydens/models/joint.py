@@ -27,7 +27,7 @@ class JointDensity(AbstractDensity):
         return model
 
     def _fit_univarite(self, series):
-        msg = "Fitting univariate density on " + series.name + " as "
+        msg = "Fitting univariate density on " + str(series.name) + " as "
         if series.name in self.categorical_features:
             self.vp(msg + "categorical")
             return self._fit_categorical(series)

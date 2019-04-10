@@ -76,12 +76,22 @@ class Cade(AbstractDensity):
             'auc': auc(val_df),
         }
 
+    def _validate_data(self, data):
+        try:
+            assert isinstance(data, pd.DataFrame)
+        except:
+            raise Exception("the data needs to be a pandas.DataFrame")
+        try:
+            assert isinstance(data.columns[0], str)
+        except:
+            raise Exception("the data column names need to be strings, not " + str(type(df.columns[0])))
+
     def train(self, df, diagnostics=False):
         ''' Model the density of the data
 
         :param df: (pandas DataFrame)
         '''
-        assert isinstance(df, pd.DataFrame)
+        self._validate_data(df)
         self.vp('Training a generative density model on '
                 + str(df.shape[0]) + ' samples')
         self.initial_density.train(df)
@@ -110,7 +120,7 @@ class Cade(AbstractDensity):
         :param X: (pd.DataFrame or numpy array) Must match the exact column order of the `df`
             argument that was passed to self.train
         '''
-        assert isinstance(X, pd.DataFrame)
+        self._validate_data(X)
         # Initial density estimate
         synthetic_dens = self.initial_density.density(X)
         # Classifier adjustment factor
