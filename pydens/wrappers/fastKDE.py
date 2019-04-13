@@ -1,4 +1,3 @@
-from fastkde import fastKDE
 import numpy as np
 import pandas as pd
 from scipy import interpolate
@@ -37,10 +36,27 @@ class Interpolator(object):
 
 class FastKDE(AbstractDensity):
     def __init__(self, params=None):
+        self._load_fastKDE()
         super().__init__()
         self.params = defaults()
         if params is not None:
             self.params.update(params)
+
+    def _load_fastKDE(self):
+        try:
+            from fastkde import fastKDE
+        except:
+            raise Exception('''
+                You need to install fastKDE first.
+                We recommend installing from source due to 
+                https://bitbucket.org/lbl-cascade/fastkde/issues/5/using-a-non-tuple-sequence-for
+                
+                To install fastKDE from source, do
+                (1) `pip install cython`
+                (2) `pip install numpy`
+                (3) `pip install git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde`
+            ''')
+        self.fastKDE = fastKDE
 
     def train(self, data):
         '''
@@ -52,7 +68,7 @@ class FastKDE(AbstractDensity):
         with warnings.catch_warnings():
             msg = "Using a non-tuple sequence for multidimensional indexing is deprecated"
             warnings.filterwarnings("ignore", message=msg)
-            grid, axes = fastKDE.pdf(
+            grid, axes = self.fastKDE.pdf(
                 *[data[col].values for col in data.columns],
                 **self.params
             )

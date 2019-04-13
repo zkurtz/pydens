@@ -28,14 +28,11 @@ setup(
     ],
     install_requires=[
         'scikit-learn',
-        # Installing fastke from source due to
-        #   https://bitbucket.org/lbl-cascade/fastkde/issues/5/using-a-non-tuple-sequence-for
-        'fastkde @ git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde',
         'lightgbm',
         'pandas',
         'psutil',
-        'scikit-learn',
-        'shmistogram @ git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram'
+        'shmistogram', # or 'shmistogram @ git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram'
+        # 'fastkde @ git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde'
     ],
     license='See LICENSE.txt'
 )

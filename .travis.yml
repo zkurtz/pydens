@@ -2,11 +2,9 @@ language: python
 python: 3.6
 install:
   - pip install --upgrade pip
-  - pip install numpy
-  - pip install Cython
-  - pip install -r requirements.txt
   - pip install .
-# worked before getting fastkde involved: pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
+  - pip install cython
+  - pip install git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde
 script: pytest
 # Enable 3.7 without globally enabling sudo and dist: xenial for other build jobs
 matrix:
