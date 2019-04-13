@@ -5,17 +5,17 @@ exec(open("pydens/version.py").read())
 version = {}
 with open("pydens/version.py") as fp:
     exec(fp.read(), version)
+#
+# try:
+#     import shmistogram
+# except:
+#     raise Exception("You first need to install shmistogram; try "
+#         + "`pip install git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram`")
 
-try:
-    import shmistogram
-except:
-    raise Exception("You first need to install shmistogram; try "
-        + "`pip install git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram`")
-
-try:
-    import cython
-except:
-    raise Exception("You must first install Cython; `pip install Cython`")
+# try:
+#     import cython
+# except:
+#     raise Exception("You must first install Cython; `pip install Cython`")
 setup(
     name='pydens',
     version=version['__version__'],
