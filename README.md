@@ -28,8 +28,7 @@ that a more efficient approach should soon render CADE largely obsolete.
 
 Not yet on pypi or conda forge, but installation is still easy with pip:
 ```buildoutcfg
-pip install --upgrade pip
-pip install git+https://github.com/zkurtz/pydens.git#egg=pydens`
+pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ```
 
 ## License
