@@ -10,26 +10,38 @@ class Evaluation(object):
         if truth is not None:
             assert isinstance(truth, np.ndarray)
         self.metrics = {
-            'rank-order correlation with truth': self.correlation_with_truth,
+            'rank-order correlation': self.rank_order_correlation,
+            'pearson correlation': self.pearson_correlation,
             'mean density': self.mean_density
         }
 
-    def correlation_with_truth(self, pred):
+    def rank_order_correlation(self, pred):
         ''' Spearman (i.e. rank-order) correlation of prediction against truth
 
         Maximize me
         '''
         if self.truth is None:
-            raise Exception("correlation_with_truth can't be computed since you did not provide anything for `truth`")
+            raise Exception("rank-order correlation can't be computed since you did not provide anything for `truth`")
         s_pred = pd.Series(pred)
         t_pred = pd.Series(self.truth)
         return s_pred.corr(t_pred, method='spearman')
 
+    def pearson_correlation(self, pred):
+        ''' Spearman (i.e. rank-order) correlation of prediction against truth
+
+        Maximize me
+        '''
+        if self.truth is None:
+            raise Exception("pearson correlation can't be computed since you did not provide anything for `truth`")
+        s_pred = pd.Series(pred)
+        t_pred = pd.Series(self.truth)
+        return s_pred.corr(t_pred)
+
     def mean_density(self, pred):
         ''' The mean density; this is exp(-deviance)
 
-         Maximize me (assuming that the estimator does not cheat by
-         producing a density model that integrates to something greater than one)
+         Maximize me IF your estimator does not cheat by
+         producing a density model that integrates to something greater than one
          '''
         return np.mean(pred)
 

@@ -10,18 +10,29 @@ Examples in the `/notebooks` directory include
 - [Identifying the common and the rare in Census data](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/census_demographics.ipynb)
 
 Applications of density estimation include
-- mode detection: Locating regions of high density is a first step to efficiently
+- **Detecting data drift**: The reliability of a trained model's prediction at a new data point
+depends on the similarity between the new point and the training data. A
+density function trained on the training data can serve as a warning of data drift
+if the evaluated density at the new point is exceptionally low. One way to focus such an
+analysis is to train and evaluate the density using only several of the most-important 
+features in the model.
+- **Mode detection**: Locating regions of high density is a first step to efficiently
 allocate resources to address an epidemic, market a product, etc.
-- feature engineering: The density at a point with respect to any subset of the dimensions of a feature
-space can encode unique information. 
-- anomaly detection: A "point of low density" is a common working definition of "anomaly",
+- **Feature engineering**: The density at a point with respect to any 
+subset of the dimensions of a feature space can encode useful information. 
+- **Anomaly detection**: A "point of low density" is a common working definition of "anomaly",
  although it's not the only one. (In astrostatistics, for example,
  a density spike may draw attention as a possible galaxy.)
+
+Evaluating the performance of a density estimator is not straightforward. We rely on a 
+mix of simulation, real-data sanity checks, and cross-validation in special cases, 
+as detailed in our 
+[evaluation guide](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/density_estimation_metrics.ipynb).
 
 Disclaimer: 
 - This is a young and relatively untested repo. See [the wishlist](#Wishlist).
 - While CADE may be a contender for the present state-of-the-art, 
-[there is a case to be made](https://github.com/Microsoft/LightGBM/issues/2056) 
+[a case has been made](https://github.com/Microsoft/LightGBM/issues/2056) 
 that a more efficient approach should soon render CADE largely obsolete.
 
 ## Installation
@@ -37,6 +48,8 @@ MIT. See LICENSE.
 
 ## Related work
 
+- [A review of density estimation packages in R](https://vita.had.co.nz/papers/density-estimation.pdf) 
+appears not to find any approach that can handle more than 6 features
 - A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
 - [Random forests](https://github.com/ksanjeevan/randomforest-density-python)
 - [Isolation forests](https://towardsdatascience.com/outlier-detection-with-isolation-forest-3d190448d45e)
@@ -53,7 +66,6 @@ Infrastructure:
 - define new simulations and real-data benchmarks
 
 Tutorials, starting with
-- understanding density estimation metrics
 - how CADE works
 - density estimation trees
 
@@ -61,5 +73,6 @@ Density estmation:
 - Optimize CADE default settings
 - Merge the best of the tree-based methods of LightGBM, 
 [detpack](https://cran.r-project.org/web/packages/detpack/index.html),
+[Schmidberger and Frank](https://link.springer.com/content/pdf/10.1007/11564126_26.pdf),
 and 
 [astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html)
