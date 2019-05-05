@@ -6,8 +6,8 @@ including an implementation of
 [classifier-adjusted density 
 estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf).
 Examples in the `/notebooks` directory include
-- [Basic usage and testing](notebooks/demo.ipynb).
-- [Identifying the common and the rare in Census data](notebooks/anomalous_demographics.ipynb)
+- [Basic usage and testing](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/demo.ipynb).
+- [Identifying the common and the rare in Census data](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/census_demographics.ipynb)
 
 Applications of density estimation include
 - mode detection: Locating regions of high density is a first step to efficiently
