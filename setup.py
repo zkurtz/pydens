@@ -32,7 +32,6 @@ setup(
         'pandas',
         'psutil',
         'shmistogram', # or 'shmistogram @ git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram'
-        # 'fastkde @ git+https://bitbucket.org/lbl-cascade/fastkde.git#egg=fastkde'
     ],
     license='See LICENSE.txt'
 )

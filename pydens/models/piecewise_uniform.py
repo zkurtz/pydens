@@ -62,7 +62,7 @@ class PiecewiseUniform(AbstractDensity):
                     'xval': self.crowd_bins[['ub']].max().values,
                     'density': [np.nan]
                 })
-            ])
+            ], sort=True)
 
     def train(self, series):
         '''
