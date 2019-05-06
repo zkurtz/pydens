@@ -27,7 +27,7 @@ subset of the dimensions of a feature space can encode useful information.
 Evaluating the performance of a density estimator is not straightforward. We rely on a 
 mix of simulation, real-data sanity checks, and cross-validation in special cases, 
 as detailed in our 
-[evaluation guide](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/density_estimation_metrics.ipynb).
+[evaluation guide](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/performance_metrics.ipynb).
 
 Disclaimer: 
 - This is a young and relatively untested repo. See [the wishlist](#Wishlist).
