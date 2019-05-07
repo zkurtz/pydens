@@ -29,11 +29,6 @@ mix of simulation, real-data sanity checks, and cross-validation in special case
 as detailed in our 
 [evaluation guide](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/performance_metrics.ipynb).
 
-Disclaimer: 
-- This is a young and relatively untested repo. See [the wishlist](#Wishlist).
-- While CADE may be a contender for the present state-of-the-art, 
-[a case has been made](https://github.com/Microsoft/LightGBM/issues/2056) 
-that a more efficient approach should soon render CADE largely obsolete.
 
 ## Installation
 
@@ -48,6 +43,8 @@ MIT. See LICENSE.
 
 ## Related work
 
+- [A case has been made](https://github.com/Microsoft/LightGBM/issues/2056) for 
+extending boosted trees to include density estimation
 - [A review of density estimation packages in R](https://vita.had.co.nz/papers/density-estimation.pdf) 
 appears not to find any approach that can handle more than 6 features
 - A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
