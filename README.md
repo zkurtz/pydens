@@ -21,8 +21,9 @@ features in the model.
 allocate resources to address an epidemic, market a product, etc.
 - **Feature engineering**: The density at a point with respect to any 
 subset of the dimensions of a feature space can encode useful information. 
-- **Anomaly detection**: A "point of low density" is a common working definition of "anomaly",
- although it's not the only one. (In astrostatistics, for example,
+- **Anomaly/novelty/outlier detection**: A "point of low density" 
+is a common working definition of "anomaly", although it's not the only one. 
+(In astrostatistics, for example,
  a density spike may draw attention as a possible galaxy.)
 
 Evaluating the performance of a density estimator is not straightforward. We rely on a 
@@ -45,7 +46,7 @@ MIT. See LICENSE.
 ## Related work
 
 - [A case has been made](https://github.com/Microsoft/LightGBM/issues/2056) for 
-extending boosted trees to include density estimation. See 
+extending boosted trees to include density estimation. See also
 [Liu and Wong (2014)](https://arxiv.org/pdf/1401.2597.pdf) and 
 [Li, Yang, Wong (2016)](http://papers.nips.cc/paper/6217-density-estimation-via-discrepancy-based-adaptive-sequential-partition.pdf)
 - [A review of density estimation packages in R](https://vita.had.co.nz/papers/density-estimation.pdf) 
@@ -54,6 +55,7 @@ appears not to find any approach that can handle more than 6 features
 - [Random forests](https://github.com/ksanjeevan/randomforest-density-python)
 - [Isolation forests](https://towardsdatascience.com/outlier-detection-with-isolation-forest-3d190448d45e)
 for density ranking
+- [Outlier detection with sklearn](https://scikit-learn.org/stable/auto_examples/plot_anomaly_comparison.html#sphx-glr-auto-examples-plot-anomaly-comparison-py)
 - [Intersection](https://medium.com/datadriveninvestor/generating-fake-data-density-estimation-and-generative-adversarial-networks-3606a37fa95)
 of density estimation and generative adversarial networks
 
@@ -61,18 +63,18 @@ of density estimation and generative adversarial networks
 
 Infrastructure:
 - expand code testing coverage
-- build type-checking methods to enforce consistent outputs
-- define additional performance metrics
-- define new simulations and real-data benchmarks
+- define new simulations
 
 Tutorials, starting with
 - how CADE works
 - density estimation trees
 
-Density estmation:
-- Optimize CADE default settings
+Density estmation: 
+- Implement a dimensionality-reduction pre-processing method. Extreme multicolinearly
+is a potential failure mode for CADE due to the features independence assumption in its 
+the naive density estimate.
 - Merge the best of the tree-based methods of LightGBM, 
 [detpack](https://cran.r-project.org/web/packages/detpack/index.html),
 [Schmidberger and Frank](https://link.springer.com/content/pdf/10.1007/11564126_26.pdf),
 and 
-[astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html)
+[astropy.stats.bayesian_blocks](http://docs.astropy.org/en/stable/api/astropy.stats.bayesian_blocks.html).
