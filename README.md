@@ -6,7 +6,7 @@ including an implementation of
 [classifier-adjusted density 
 estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf).
 Examples in the `/notebooks` directory include
-- [Basic usage and testing](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/demo.ipynb).
+- [Basic usage and testing](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/demo.ipynb)
 - [Identifying the common and the rare in Census data](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/census_demographics.ipynb)
 
 Applications of density estimation include
@@ -44,7 +44,9 @@ MIT. See LICENSE.
 ## Related work
 
 - [A case has been made](https://github.com/Microsoft/LightGBM/issues/2056) for 
-extending boosted trees to include density estimation
+extending boosted trees to include density estimation. See 
+[Liu and Wong (2014)](https://arxiv.org/pdf/1401.2597.pdf) and 
+[Li, Yang, Wong (2016)](http://papers.nips.cc/paper/6217-density-estimation-via-discrepancy-based-adaptive-sequential-partition.pdf)
 - [A review of density estimation packages in R](https://vita.had.co.nz/papers/density-estimation.pdf) 
 appears not to find any approach that can handle more than 6 features
 - A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
