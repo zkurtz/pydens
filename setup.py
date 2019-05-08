@@ -33,5 +33,7 @@ setup(
         'psutil',
         'shmistogram', # or 'shmistogram @ git+https://github.com/zkurtz/shmistogram.git#egg=shmistogram'
     ],
+    package_dir={'pydens': 'pydens'},
+    package_data={'pydens': ['resources/data/japanese_vowels.csv']},
     license='See LICENSE.txt'
 )

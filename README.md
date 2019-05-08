@@ -8,6 +8,7 @@ estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb
 Examples in the `/notebooks` directory include
 - [Basic usage and testing](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/demo.ipynb)
 - [Identifying the common and the rare in Census data](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/census_demographics.ipynb)
+- [Modest performance on an anomaly detection benchmark](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/vowels.ipynb)
 
 Applications of density estimation include
 - **Detecting data drift**: The reliability of a trained model's prediction at a new data point

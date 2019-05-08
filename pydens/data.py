@@ -1,4 +1,5 @@
 import pandas as pd
+import pkg_resources
 
 class CadeData(object):
     ''' A standardized data format for pydens.cade.Cade '''
@@ -8,6 +9,11 @@ class CadeData(object):
         assert len(y)==X.shape[0]
         self.X = X
         self.y = y
+
+def load_Japanese_vowels_data():
+    ''' Data downloaded from http://odds.cs.stonybrook.edu/japanese-vowels-data/ '''
+    DATA_PATH = pkg_resources.resource_filename('pydens', 'resources/data/japanese_vowels.csv')
+    return pd.read_csv(DATA_PATH)
 
 def load_SHAP_census_data():
     ''' This loads the 'adults' dataset cached in SHAP, borrowing a few SHAP

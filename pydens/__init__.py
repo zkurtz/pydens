@@ -6,5 +6,6 @@ from . import simulators
 from . import wrappers
 
 from .data import load_SHAP_census_data
+from .data import load_Japanese_vowels_data
 
 from .version import __version__
