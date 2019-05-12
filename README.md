@@ -53,8 +53,6 @@ extending boosted trees to include density estimation. See also
 appears not to find any approach that can handle more than 6 features
 - A 'nearest neighbors' [fastkde](https://github.com/mjenrungrot/fastKDE)
 - [Random forests](https://github.com/ksanjeevan/randomforest-density-python)
-- [Isolation forests](https://towardsdatascience.com/outlier-detection-with-isolation-forest-3d190448d45e)
-for density ranking
 - [Outlier detection with sklearn](https://scikit-learn.org/stable/auto_examples/plot_anomaly_comparison.html#sphx-glr-auto-examples-plot-anomaly-comparison-py)
 - [Intersection](https://medium.com/datadriveninvestor/generating-fake-data-density-estimation-and-generative-adversarial-networks-3606a37fa95)
 of density estimation and generative adversarial networks
@@ -71,8 +69,8 @@ Tutorials, starting with
 
 Density estmation: 
 - Implement a dimensionality-reduction pre-processing method. Extreme multicolinearly
-is a potential failure mode for CADE due to the features independence assumption in its 
-the naive density estimate.
+is a potential failure mode in CADE due to the feature independence assumption 
+for the naive density estimate.
 - Merge the best of the tree-based methods of LightGBM, 
 [detpack](https://cran.r-project.org/web/packages/detpack/index.html),
 [Schmidberger and Frank](https://link.springer.com/content/pdf/10.1007/11564126_26.pdf),

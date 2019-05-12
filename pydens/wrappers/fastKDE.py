@@ -72,6 +72,8 @@ class FastKDE(AbstractDensity):
                 *[data[col].values for col in data.columns],
                 **self.params
             )
+        if not isinstance(axes, list): # then probably this is 1-D estimation
+            axes = [axes]
         self.interpolator = Interpolator(grid, axes)
 
     def density(self, data):
