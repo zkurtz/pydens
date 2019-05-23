@@ -5,7 +5,7 @@
 including an implementation of 
 [classifier-adjusted density 
 estimation](https://pdfs.semanticscholar.org/e4e6/033069a8569ba16f64da3061538bcb90bec6.pdf).
-Examples in the `/notebooks` directory include
+Examples include
 - [Basic usage and testing](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/demo.ipynb)
 - [Identifying the common and the rare in Census data](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/census_demographics.ipynb)
 - [Modest performance on an anomaly detection benchmark](https://nbviewer.jupyter.org/github/zkurtz/pydens/blob/master/notebooks/vowels.ipynb)
@@ -34,7 +34,7 @@ as detailed in our
 
 ## Installation
 
-Not yet on pypi or conda forge, but installation is still easy with pip:
+Not yet on pypi or conda forge, but installation is easy:
 ```buildoutcfg
 pip install git+https://github.com/zkurtz/pydens.git#egg=pydens
 ```
@@ -67,10 +67,10 @@ Tutorials, starting with
 - how CADE works
 - density estimation trees
 
-Density estmation: 
+Density estimation: 
 - Implement a dimensionality-reduction pre-processing method. Extreme multicolinearly
-is a potential failure mode in CADE due to the feature independence assumption 
-for the naive density estimate.
+is a potential failure mode in CADE because the classifier can trivially distinguish
+fake data from real since the fake data model assumes feature independence.
 - Merge the best of the tree-based methods of LightGBM, 
 [detpack](https://cran.r-project.org/web/packages/detpack/index.html),
 [Schmidberger and Frank](https://link.springer.com/content/pdf/10.1007/11564126_26.pdf),
